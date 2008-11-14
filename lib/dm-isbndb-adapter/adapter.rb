@@ -63,7 +63,7 @@ module DataMapper
                 attributes[name] = value
               end
               values = result_values(attributes,properties,query.repository.name)
-              one ? (break set.load(values,query)) : set.load(values) 
+              one ? (return set.load(values,query)) : set.load(values) 
             end
           end
       end

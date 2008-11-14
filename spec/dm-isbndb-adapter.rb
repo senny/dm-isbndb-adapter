@@ -37,8 +37,7 @@ describe "dm-isbndb-adapter" do
     end
     
     it "should get a set of books" do
-      puts @books.class.to_s
-      @books.should be_instance_of(DataMapper::Collection) 
+      @books.should be_kind_of(DataMapper::Collection) 
     end
     
   end
@@ -49,12 +48,20 @@ describe "dm-isbndb-adapter" do
       @book = Book.first
     end
     
-    it "should only read one book" do
-      @book.should be_instance_of(Book) 
+    it "should initialize the id attribute" do
+      @book.id.should == 'law_and_disorder'
     end
-
+    
+    it "should only read one book" do
+      @book.should be_kind_of(Book) 
+    end
+    
     it "should initialize the title attribute" do
-
+      @book.title.should == 'Law and disorder'
+    end
+    
+    it "should initialize the isbn attribute" do
+      @book.isbn.should == '0210406240'
     end
 
   end
