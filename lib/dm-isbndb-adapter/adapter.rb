@@ -58,9 +58,13 @@ module DataMapper
             end
 
             list.elements.each do |record|
-              attributes = {}
-              record.attributes.each do |name,value| 
-                attributes[name] = value
+              attributes = read_node_attributes(record)
+              list.children.each do |child|
+                if child.node_type == :element
+                attributes.merge! read_node_attributes(child)
+                puts child.to_s
+                attributes[child.to_s] = child.text unless child.text.empty?
+              end
               end
               values = result_values(attributes,properties,query.repository.name)
               one ? (return set.load(values,query)) : set.load(values) 
@@ -68,8 +72,16 @@ module DataMapper
           end
       end
       
+      def read_node_attributes(record)
+        attributes = {}
+        record.attributes.each do |name,value| 
+          attributes[name] = value
+        end
+        attributes
+      end
+      
       def result_values(result, properties, repository_name)
-          properties.map { |p| key = p.field(repository_name); result.key?(key) ? result[key] : nil }.compact
+          properties.map { |p| key = p.field(repository_name); result.key?(key) ? result[key] : nil }
       end
 
       def build_request_uri(options, model)
