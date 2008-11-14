@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<ISBNdb server_time="2006-01-23T01:16:28">
+ <CategoryList total_results="1" page_size="10" page_number="1" shown_results="1">
+  <CategoryData category_id="alphabetically.authors.b.l" parent_id="alphabetically.authors.b">
+   <Name>L</Name>
+   <Details summary="Authors, 'BL'" depth="3" element_count="0"/>
+  </CategoryData>
+ </CategoryList>
+</ISBNdb>

@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ISBNdb server_time="2006-01-18T13:28:10">
+ <PublisherList total_results="1" page_size="10" page_number="1" shown_results="1">
+  <PublisherData publisher_id="oreilly">
+   <Name>O'Reilly</Name>
+   <Details location="Sebastopol, CA"/>
+  </PublisherData>
+ </PublisherList>
+</ISBNdb>
