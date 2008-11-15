@@ -4,7 +4,7 @@ describe 'db-isbndb-adapter' do
   describe 'when all authors loaded' do
     
     before(:all) do
-      @authors = Author.all
+      @authors = Author.all(:name.like => 'Atkinson')
     end
     
     it "should load a collection of authors" do
@@ -20,7 +20,7 @@ describe 'db-isbndb-adapter' do
   describe 'when a single author is loaded' do
     
     before(:all) do
-      @author = Author.first
+      @author = Author.first(:id.eql => 'kim_anthony_aaronson')
     end
     
     it "should load only one author" do
@@ -28,11 +28,7 @@ describe 'db-isbndb-adapter' do
     end
     
     it "should set an id attribute" do
-      @author.id.should == 'anthony_a_atkinson'
-    end
-    
-    it "should set a count of writen books" do
-      @author.books_written.should == 1
+      @author.id.should == 'kim_anthony_aaronson'
     end
     
   end

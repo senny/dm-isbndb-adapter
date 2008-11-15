@@ -1,23 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ISBNdb server_time="2005-07-29T02:41:22">
  <BookList total_results="1" page_size="10" page_number="1" shown_results="1">
-  <BookData book_id="law_and_disorder" isbn="0210406240">
-   <Title>Law and disorder</Title>
-   <TitleLong>
-    Law and disorder: law enforcement in television network news
-   </TitleLong>
-   <AuthorsText>V. M. Mishra</AuthorsText>
-   <PublisherText publisher_id="asia_pub_house">
-    New York: Asia Pub. House, c1979.
-   </PublisherText>
-   <Details dewey_decimal="302.2/3"
-            dewey_decimal_normalized="302.23"
-            lcc_number="PN4888"
-            language="eng"
-            physical_description_text="x, 127 p. ; 22 cm."
-            edition_info=""
-            change_time="2004-10-19T23:52:56"
-            price_time="2005-07-29T02:06:41" />
-  </BookData>
+ <BookData book_id="50_classic_hikes_in_nevada" isbn="0874176298" isbn13="9780874176292">
+ <Title>50 Classic Hikes in Nevada</Title>
+ <TitleLong>
+ 50 Classic Hikes in Nevada: From the Ruby Mountains to Red Rock Canyon
+ </TitleLong>
+ <AuthorsText>Michael C. White, </AuthorsText>
+ <PublisherText publisher_id="university_of_nevada_press">University of Nevada Press</PublisherText>
+ </BookData>
  </BookList>
 </ISBNdb>

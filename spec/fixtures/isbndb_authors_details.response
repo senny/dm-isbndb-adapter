@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ISBNdb server_time="2006-01-22T20:56:03">
- <AuthorList total_results="1" page_size="10" page_number="1" shown_results="1">
-  <AuthorData person_id="anthony_a_atkinson">
-   <Name>Anthony A. Atkinson</Name>
-   <Details first_name="Anthony" last_name="Atkinson" dates="" has_books="1" />
+  <AuthorList total_results="1" page_size="10" page_number="1" shown_results="1">
+  <AuthorData person_id="kim_anthony_aaronson">
+  <Name>Kim Anthony Aaronson</Name>
+  <Details first_name="Kim" last_name="Aaronson" dates="" has_books="1"/>
   </AuthorData>
  </AuthorList>
 </ISBNdb>

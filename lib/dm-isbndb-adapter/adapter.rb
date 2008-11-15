@@ -46,9 +46,10 @@ module DataMapper
       private
 
       def read(query, set, one)
+        raise IsbndbInterface::ConditionsError, "You need to specify at least one condition" if query.conditions.nil? || query.conditions.empty?
         model_name = query.model.to_s
         properties = query.fields
-        options = extract_options(query.conditions)
+        options = extract_options(query)
         resource_url = build_request_uri(options,query.model)
           xml_data = Net::HTTP.get_response(URI.parse(resource_url)).body
           doc = REXML::Document.new(xml_data)
@@ -70,13 +71,13 @@ module DataMapper
         node.elements.each do |child|
           attributes.merge! read_node_attributes(child)
           if child.node_type == :element
-            attribute = query.model.properties(repository.name).find do |property|
+            attribute = query.model.properties(query.repository.name).find do |property|
               property.name.to_s == Extlib::Inflection.underscore(child.name.to_s)
             end
           end
           
           if attribute
-            attributes[attribute.name.to_s] = child.text.strip
+            attributes[attribute.name.to_s] = child.text.strip unless child.text.nil?
           end
         end
         attributes
@@ -96,10 +97,10 @@ module DataMapper
 
       def build_request_uri(options, model)
         resource_name = convert_model_to_resource_name(model)
-        resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}"
+        resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}&results=details"
         options.each_with_index do |condition,index| 
           prop,val = condition
-          resource_url += "&index#{index+1}=#{prop.to_s}&value#{index+1}=#{val}"
+          resource_url += "&index#{index+1}=#{prop}&value#{index+1}=#{val}"
         end
         
         resource_url
@@ -109,17 +110,16 @@ module DataMapper
         model.to_s.downcase.pluralize
       end
 
-      def extract_options(query_conditions)
+      def extract_options(query)
           options = {}
  
-          query_conditions.each do |condition|
+          query.conditions.each do |condition|
             operator, property, value = condition
             case operator
-              when :eql, :like then options.merge!(property => value)
+              when :eql, :like then options.merge!(property.field(query.repository.name) => value)
             end
             
           end
- 
           options
         end
 

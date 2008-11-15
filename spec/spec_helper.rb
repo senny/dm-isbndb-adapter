@@ -4,7 +4,7 @@ require File.dirname(__FILE__) +'/../lib/dm-isbndb-adapter'
 
 $MOCK_ISBNDB ||= true
 
-require File.dirname(__FILE__)+'/mocks/isbndb_api'
+require File.dirname(__FILE__)+'/mocks/isbndb_api' if $MOCK_ISBNDB
 
 DataMapper.setup(:default, {
   :adapter => 'isbndb',

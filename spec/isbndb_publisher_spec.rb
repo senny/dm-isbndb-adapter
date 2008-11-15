@@ -4,7 +4,7 @@ describe 'db-isbndb-adapter' do
   describe 'when all publishers loaded' do
     
     before(:all) do
-      @publishers = Publisher.all
+      @publishers = Publisher.all(:name.like => 'Reilly')
     end
     
     it "should load a collection of publishers" do
@@ -20,7 +20,7 @@ describe 'db-isbndb-adapter' do
   describe 'when a single publisher is loaded' do
     
     before(:all) do
-      @publisher = Publisher.first
+      @publisher = Publisher.first(:id.eql => 'oreilly')
     end
     
     it "should load only one publisher" do

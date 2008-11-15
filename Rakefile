@@ -1,7 +1,12 @@
 require 'rubygems'
 require 'rake/gempackagetask'
 require 'rubygems/specification'
+require 'spec'
+require 'spec/rake/spectask'
+require 'pathname'
 require 'date'
+
+ROOT = Pathname(__FILE__).dirname.expand_path
 
 GEM = "dm-isbndb-adapter"
 GEM_VERSION = "0.0.1"
@@ -44,4 +49,12 @@ task :make_spec do
   File.open("#{GEM}.gemspec", "w") do |file|
     file.puts spec.to_ruby
   end
+end
+
+desc 'Run specifications'
+Spec::Rake::SpecTask.new(:spec) do |t|
+  if File.exists?('spec/spec.opts')
+    t.spec_opts << '--options' << 'spec/spec.opts'
+  end
+  t.spec_files = Pathname.glob((ROOT + 'spec/**/*_spec.rb').to_s)
 end
