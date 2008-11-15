@@ -29,9 +29,5 @@ describe "dm-isbndb-adapter" do
     uri = @adapter.send :build_request_uri, {}, Book,1
     uri.should include('/books.xml')
   end
-
-  it "should url-escape the passed query-conditions" do
-    pending 
-  end
   
 end

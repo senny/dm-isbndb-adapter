@@ -31,7 +31,7 @@ spec = Gem::Specification.new do |s|
   # s.add_dependency "isbndb"
   
   s.require_path = 'lib'
-  s.files = %w(LICENSE README Rakefile) + Dir.glob("{lib,specs}/**/*")
+  s.files = %w(LICENSE README Rakefile TODO) + Dir.glob("{lib,specs}/**/*")
 end
 
 Rake::GemPackageTask.new(spec) do |pkg|

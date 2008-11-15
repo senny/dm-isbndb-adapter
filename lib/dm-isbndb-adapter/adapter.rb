@@ -102,7 +102,7 @@ module DataMapper
 
       def build_request_uri(options, model,page_number)
         resource_name = convert_model_to_resource_name(model)
-        resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}&results=details"
+        resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}&results=texts,authors,details"
         options.each_with_index do |condition,index| 
           prop,val = condition
           resource_url += "&index#{index+1}=#{prop}&value#{index+1}=#{val}&page_number=#{page_number}"
