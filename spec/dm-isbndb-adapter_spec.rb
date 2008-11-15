@@ -16,17 +16,17 @@ describe "dm-isbndb-adapter" do
 
   it "should accept a url parameter to specify the api location" do
     lambda{ @adapter = DataMapper.setup(:default, {:adapter => 'isbndb',:access_key => 'asHd7JN',:url => 'http://test.ch/api'})}.should_not raise_error(IsbndbInterface::SettingsError)
-    uri = @adapter.send :build_request_uri, {}, Book
+    uri = @adapter.send :build_request_uri, {}, Book,1
     uri.should include('http://test.ch/api/')
   end
 
   it "should generate a valid isbndb-url when asked to do so" do
-    uri = @adapter.send :build_request_uri, {:title => 'foo'}, Book
+    uri = @adapter.send :build_request_uri, {:title => 'foo'}, Book,1
     uri.should include("&index1=title&value1=foo")
   end
 
   it "should convert the model-name to a valid isbndb resource-name" do
-    uri = @adapter.send :build_request_uri, {}, Book
+    uri = @adapter.send :build_request_uri, {}, Book,1
     uri.should include('/books.xml')
   end
 

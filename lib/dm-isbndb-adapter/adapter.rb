@@ -1,3 +1,4 @@
+require "cgi"
 require 'dm-core'
 require 'net/http'
 require 'rexml/document'
@@ -45,25 +46,29 @@ module DataMapper
 
       private
 
-      def read(query, set, one)
+      def read(query, set, one, page_number = 1)
         raise IsbndbInterface::ConditionsError, "You need to specify at least one condition" if query.conditions.nil? || query.conditions.empty?
         model_name = query.model.to_s
         properties = query.fields
         options = extract_options(query)
-        resource_url = build_request_uri(options,query.model)
-          xml_data = Net::HTTP.get_response(URI.parse(resource_url)).body
-          doc = REXML::Document.new(xml_data)
-          doc.elements.each("/ISBNdb/#{model_name}List") do |list|
-            list.attributes.each do |name,value| 
-              #TODO: implement pagination
-            end
-
-            list.elements.each do |record|
-              attributes = parse_node_childs(query,record)
-              values = result_values(attributes,properties,query.repository.name)
-              one ? (return set.load(values,query)) : set.load(values) 
-            end
+        resource_url = build_request_uri(options,query.model,page_number)
+        doc = request_isbndb_xml(resource_url)
+        doc.elements.each("/ISBNdb/#{model_name}List") do |list|
+          total = list.attributes['total_results'].to_i
+          page_size = list.attributes['page_size'].to_i
+          current_page = list.attributes['page_number'].to_i
+          list.elements.each do |record|
+            attributes = parse_node_childs(query,record)
+            values = result_values(attributes,properties,query.repository.name)
+            one ? (return set.load(values,query)) : set.load(values) 
           end
+          read(query,set,false,current_page + 1) if page_size * current_page < total
+        end
+      end
+      
+      def request_isbndb_xml(url)
+        xml_data = Net::HTTP.get_response(URI.parse(url)).body
+        REXML::Document.new(xml_data)
       end
       
       def parse_node_childs(query, node)
@@ -95,12 +100,12 @@ module DataMapper
           properties.map { |p| key = p.field(repository_name); result.key?(key) ? result[key] : nil }
       end
 
-      def build_request_uri(options, model)
+      def build_request_uri(options, model,page_number)
         resource_name = convert_model_to_resource_name(model)
         resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}&results=details"
         options.each_with_index do |condition,index| 
           prop,val = condition
-          resource_url += "&index#{index+1}=#{prop}&value#{index+1}=#{val}"
+          resource_url += "&index#{index+1}=#{prop}&value#{index+1}=#{val}&page_number=#{page_number}"
         end
         
         resource_url
@@ -116,7 +121,7 @@ module DataMapper
           query.conditions.each do |condition|
             operator, property, value = condition
             case operator
-              when :eql, :like then options.merge!(property.field(query.repository.name) => value)
+              when :eql, :like then options.merge!(property.field(query.repository.name) => CGI::escape(value))
             end
             
           end
