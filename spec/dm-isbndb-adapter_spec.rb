@@ -60,6 +60,10 @@ describe "dm-isbndb-adapter" do
       @book.title.should == 'Law and disorder'
     end
     
+    it "should set a title_long attribute" do
+      @book.title_long.should == 'Law and disorder: law enforcement in television network news'
+    end
+    
     it "should initialize the isbn attribute" do
       @book.isbn.should == '0210406240'
     end

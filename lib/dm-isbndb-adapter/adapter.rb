@@ -45,7 +45,7 @@ module DataMapper
 
       private
 
-      def read(query, set, one = true)
+      def read(query, set, one)
         model_name = query.model.to_s
         properties = query.fields
         options = extract_options(query.conditions)
@@ -58,18 +58,28 @@ module DataMapper
             end
 
             list.elements.each do |record|
-              attributes = read_node_attributes(record)
-              list.children.each do |child|
-                if child.node_type == :element
-                attributes.merge! read_node_attributes(child)
-                puts child.to_s
-                attributes[child.to_s] = child.text unless child.text.empty?
-              end
-              end
+              attributes = parse_node_childs(query,record)
               values = result_values(attributes,properties,query.repository.name)
               one ? (return set.load(values,query)) : set.load(values) 
             end
           end
+      end
+      
+      def parse_node_childs(query, node)
+        attributes = read_node_attributes(node)
+        node.elements.each do |child|
+          attributes.merge! read_node_attributes(child)
+          if child.node_type == :element
+            attribute = query.model.properties(repository.name).find do |property|
+              property.name.to_s == Extlib::Inflection.underscore(child.name.to_s)
+            end
+          end
+          
+          if attribute
+            attributes[attribute.name.to_s] = child.text.strip
+          end
+        end
+        attributes
       end
       
       def read_node_attributes(record)
