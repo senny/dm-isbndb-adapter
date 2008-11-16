@@ -4,7 +4,7 @@ describe "dm-isbndb-adapter" do
   describe "getting all books" do
   
     before(:all) do
-      @books = Book.all(:title.like => 'Rails')
+      @books = Book.all(:title.like => 'Rails development')
     end
   
     it "should get a set of books" do

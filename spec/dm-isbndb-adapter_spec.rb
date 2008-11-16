@@ -30,4 +30,12 @@ describe "dm-isbndb-adapter" do
     uri.should include('/books.xml')
   end
   
+  it "should accept eql and like conditions" do
+    lambda { Book.first(:title.eql => 'The Rails Way') }.should_not raise_error(IsbndbInterface::ConditionsError)
+  end
+  
+  it "should not accept conditions other than eql and like" do
+    lambda { Book.first(:title.lte => 'Way') }.should raise_error(IsbndbInterface::ConditionsError)
+  end
+  
 end

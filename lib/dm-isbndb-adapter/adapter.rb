@@ -46,88 +46,78 @@ module DataMapper
 
       private
 
-      def read(query, set, one, page_number = 1)
-        raise IsbndbInterface::ConditionsError, "You need to specify at least one condition" if query.conditions.nil? || query.conditions.empty?
-        model_name = query.model.to_s
-        properties = query.fields
-        options = extract_options(query)
-        resource_url = build_request_uri(options,query.model,page_number)
-        doc = request_isbndb_xml(resource_url)
-        doc.elements.each("/ISBNdb/#{model_name}List") do |list|
-          total = list.attributes['total_results'].to_i
-          page_size = list.attributes['page_size'].to_i
-          current_page = list.attributes['page_number'].to_i
-          list.elements.each do |record|
-            attributes = parse_node_childs(query,record)
-            values = result_values(attributes,properties,query.repository.name)
-            one ? (return set.load(values,query)) : set.load(values) 
+        def read(query, set, one, page_number = 1)
+          raise IsbndbInterface::ConditionsError, "You need to specify at least one condition" if query.conditions.nil? || query.conditions.empty?
+          options = extract_options(query)
+          resource_url = build_request_uri(options,query.model,page_number)
+          doc = request_isbndb_xml(resource_url)
+          doc.elements.each("/ISBNdb/#{query.model.to_s}List") do |list|
+            list.elements.each do |record|
+              attributes = parse_node_childs(query,record)
+              values = result_values(attributes,query.fields,query.repository.name)
+              one ? (return set.load(values,query)) : set.load(values) 
+            end
+          
+            # Checks if there are more result pages
+            total = list.attributes['total_results'].to_i
+            page_size = list.attributes['page_size'].to_i
+            current_page = list.attributes['page_number'].to_i
+            # Recurivly call read if the current page ist not the last one
+            read(query,set,false,current_page + 1) if page_size * current_page < total        
           end
-          read(query,set,false,current_page + 1) if page_size * current_page < total
         end
-      end
       
-      def request_isbndb_xml(url)
-        xml_data = Net::HTTP.get_response(URI.parse(url)).body
-        REXML::Document.new(xml_data)
-      end
+        def request_isbndb_xml(url)
+          xml_data = Net::HTTP.get_response(URI.parse(url)).body
+          REXML::Document.new(xml_data)
+        end
       
-      def parse_node_childs(query, node)
-        attributes = read_node_attributes(node)
-        node.elements.each do |child|
-          attributes.merge! read_node_attributes(child)
-          if child.node_type == :element
-            attribute = query.model.properties(query.repository.name).find do |property|
-              property.name.to_s == Extlib::Inflection.underscore(child.name.to_s)
+        def parse_node_childs(query, node)
+          attributes = node.attributes
+          node.elements.each do |child|
+            attributes.merge! child.attributes
+            if child.node_type == :element
+              attribute = query.model.properties(query.repository.name).find do |property|
+                property.name.to_s == Extlib::Inflection.underscore(child.name.to_s)
+              end
+            end
+          
+            if attribute
+              attributes[attribute.name.to_s] = child.text.strip unless child.text.nil?
             end
           end
-          
-          if attribute
-            attributes[attribute.name.to_s] = child.text.strip unless child.text.nil?
-          end
-        end
-        attributes
-      end
-      
-      def read_node_attributes(record)
-        attributes = {}
-        record.attributes.each do |name,value| 
-          attributes[name] = value
-        end
-        attributes
-      end
-      
-      def result_values(result, properties, repository_name)
-          properties.map { |p| key = p.field(repository_name); result.key?(key) ? result[key] : nil }
-      end
-
-      def build_request_uri(options, model,page_number)
-        resource_name = convert_model_to_resource_name(model)
-        resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}&results=texts,authors,details"
-        options.each_with_index do |condition,index| 
-          prop,val = condition
-          resource_url += "&index#{index+1}=#{prop}&value#{index+1}=#{val}&page_number=#{page_number}"
+          attributes
         end
         
-        resource_url
-      end
-      
-      def convert_model_to_resource_name(model)
-        model.to_s.downcase.pluralize
-      end
+        def result_values(result, properties, repository_name)
+          # Converts the result-hash into a sorted array for the Model/Collection load method
+          properties.map { |p| key = p.field(repository_name); result.key?(key) ? result[key] : nil }
+        end
 
-      def extract_options(query)
+        def build_request_uri(options, model,page_number)
+          # Converts the class to the needed resource name (Book => books)
+          resource_name = model.to_s.downcase.pluralize
+          resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}&results=texts,authors,details&page_number=#{page_number}"
+          options.each_with_index do |condition,index| 
+            prop,val = condition
+            resource_url += "&index#{index+1}=#{prop}&value#{index+1}=#{val}"
+          end
+        
+          resource_url
+        end
+
+        def extract_options(query)
           options = {}
  
           query.conditions.each do |condition|
             operator, property, value = condition
             case operator
               when :eql, :like then options.merge!(property.field(query.repository.name) => CGI::escape(value))
+              else raise IsbndbInterface::ConditionsError, 'At the moment only eql and like is supported'
             end
-            
           end
           options
         end
-
-    end 
-  end 
-end 
+    end #IsbndbAdapter
+  end #Adapters
+end #DataMapper
