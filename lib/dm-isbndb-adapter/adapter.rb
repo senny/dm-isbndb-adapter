@@ -97,6 +97,7 @@ module DataMapper
           options = {}
           query.conditions.each do |condition|
             operator, property, value = condition
+            puts property.field(query.repository.name)
             case operator
               when :eql, :like then options.merge!(property.field(query.repository.name) => CGI::escape(value))
               else raise IsbndbInterface::ConditionsError, 'At the moment only eql and like is supported'
