@@ -38,4 +38,8 @@ describe "dm-isbndb-adapter" do
     lambda { Book.first(:title.lte => 'Way') }.should raise_error(IsbndbInterface::ConditionsError)
   end
   
+  it "should not be able to create a new record" do
+    lambda { Book.create(:id => 'foo', :title => 'bar') }.should raise_error(NotImplementedError)
+  end
+  
 end

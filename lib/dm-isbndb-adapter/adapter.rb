@@ -32,18 +32,6 @@ module DataMapper
         read(query, query.model, true)
       end
 
-      def create(resources)
-        raise NotImplementedError
-      end
-
-      def update(attributes, query)
-        raise NotImplementedError
-      end
-
-      def delete(query)
-        raise NotImplementedError
-      end 
-
       private
 
         def read(query, set, one, page_number = 1)
