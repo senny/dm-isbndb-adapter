@@ -43,9 +43,13 @@ describe "dm-isbndb-adapter" do
   end
   
   it "should take care, when the storage name is not identical with the model name" do
-    book = BookD.first(:title.eql => 'The Rails Way')
-    puts book.title
-    book.should be_kind_of(BookD)
+    book = BookStorageTest.first(:title.eql => 'The Rails Way')
+    book.should be_kind_of(BookStorageTest)
+  end
+  
+  it "should be able to lazy load additional properties" do
+    book = BookStorageTest.first(:title.eql => 'The Rails Way')
+    book.summary.should_not be_empty
   end
   
 end

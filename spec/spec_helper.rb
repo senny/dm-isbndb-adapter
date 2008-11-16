@@ -1,4 +1,5 @@
 require "rubygems"
+require "dm-types"
 require "spec"
 require File.dirname(__FILE__) +'/../lib/dm-isbndb-adapter'
 
@@ -16,9 +17,11 @@ class Book
   include DataMapper::Resource::Isbndb::BookModel
 end
 
-class BookD
+class BookStorageTest
   include DataMapper::Resource
   include DataMapper::Resource::Isbndb::BookModel
+  
+  property :summary, Text
   
   storage_names[:default] = 'books'
 end

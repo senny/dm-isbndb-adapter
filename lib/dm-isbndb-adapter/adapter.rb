@@ -35,7 +35,6 @@ module DataMapper
       private
 
         def read(query, set, one, page_number = 1)
-          raise IsbndbInterface::ConditionsError, "You need to specify at least one condition" if query.conditions.nil? || query.conditions.empty?
           options = extract_options(query)
           resource_name = query.model.storage_name(query.repository.name)
           list_element_name = Extlib::Inflection.camelize(resource_name.singularize)
@@ -86,7 +85,7 @@ module DataMapper
 
         def build_request_uri(options, resource_name, page_number)
           # Converts the class to the needed resource name (Book => books)
-          resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}&results=texts,authors,details&page_number=#{page_number}"
+          resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}&results=texts,details&page_number=#{page_number}"
           options.each_with_index do |condition,index| 
             prop,val = condition
             resource_url += "&index#{index+1}=#{prop}&value#{index+1}=#{val}"
@@ -96,7 +95,6 @@ module DataMapper
 
         def extract_options(query)
           options = {}
- 
           query.conditions.each do |condition|
             operator, property, value = condition
             case operator
@@ -104,6 +102,7 @@ module DataMapper
               else raise IsbndbInterface::ConditionsError, 'At the moment only eql and like is supported'
             end
           end
+          raise IsbndbInterface::ConditionsError, "You need to specify at least one condition" if options.size < 1
           options
         end
     end #IsbndbAdapter

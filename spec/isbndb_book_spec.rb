@@ -22,11 +22,11 @@ describe "dm-isbndb-adapter" do
   describe "getting one book" do
   
     before(:all) do
-      @book = Book.first(:id.eql => '50_classic_hikes_in_nevada')
+      @book = Book.first(:id.eql => 'the_rails_way')
     end
   
     it "should initialize the id attribute" do
-      @book.id.should == '50_classic_hikes_in_nevada'
+      @book.id.should == 'the_rails_way'
     end
   
     it "should only read one book" do
@@ -34,15 +34,15 @@ describe "dm-isbndb-adapter" do
     end
   
     it "should initialize the title attribute" do
-      @book.title.should == '50 Classic Hikes in Nevada'
+      @book.title.should == 'The Rails Way'
     end
   
     it "should set a title_long attribute" do
-      @book.title_long.should == '50 Classic Hikes in Nevada: From the Ruby Mountains to Red Rock Canyon'
+      @book.title_long.should == 'The Rails Way (Addison-Wesley Professional Ruby Series)'
     end
   
     it "should initialize the isbn attribute" do
-      @book.isbn.should == '0874176298'
+      @book.isbn.should == '0321445619'
     end
 
   end

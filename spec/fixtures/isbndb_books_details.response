@@ -1,13 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <ISBNdb server_time="2005-07-29T02:41:22">
  <BookList total_results="1" page_size="10" page_number="1" shown_results="1">
- <BookData book_id="50_classic_hikes_in_nevada" isbn="0874176298" isbn13="9780874176292">
- <Title>50 Classic Hikes in Nevada</Title>
+ <BookData book_id="the_rails_way" isbn="0321445619" isbn13="9780321445612">
+ <Title>The Rails Way</Title>
  <TitleLong>
- 50 Classic Hikes in Nevada: From the Ruby Mountains to Red Rock Canyon
+ The Rails Way (Addison-Wesley Professional Ruby Series)
  </TitleLong>
- <AuthorsText>Michael C. White, </AuthorsText>
- <PublisherText publisher_id="university_of_nevada_press">University of Nevada Press</PublisherText>
+ <AuthorsText>Obie Fernandez, </AuthorsText>
+ <PublisherText publisher_id="addison_wesley_professional">Addison-Wesley Professional</PublisherText>
+ <Details change_time="2007-12-30T22:28:15Z" price_time="2008-11-16T00:40:13Z" edition_info="Paperback; 2007-11-26" language="" physical_description_text="912 pages" lcc_number="" dewey_decimal_normalized="5.117" dewey_decimal="005.117"/>
+ <Summary>
+ The expert guide to building Ruby on Rails applications Ruby on Rails strips complexity from the development process, enabling professional developers to focus on what matters most: delivering business value. Now, for the first time, there&rsquo;s a comprehensive, authoritative guide to building production-quality software with Rails. Pioneering Rails developer Obie Fernandez and a team of experts illuminate the entire Rails API, along with the Ruby idioms, design approaches, libraries, and plug-ins that make Rails so valuable. Drawing on their unsurpassed experience, they address the real challenges development teams face, showing how to use Rails&rsquo; tools and best practices to maximize productivity and build polished applications users will enjoy. Using detailed code examples, Obie systematically covers Rails&rsquo; key capabilities and subsystems. He presents advanced programming techniques, introduces open source libraries that facilitate easy Rails adoption, and offers important insights into testing and production deployment. Dive deep into the Rails codebase together, discovering why Rails behaves as it does&ndash; and how to make it behave the way you want it to. This book will help you Increase your productivity as a web developer Realize the overall joy of programming with Ruby on Rails Learn what&rsquo;s new in Rails 2.0 Drive design and protect long-term maintainability with TestUnit and RSpec Understand and manage complex program flow in Rails controllers Leverage Rails&rsquo; support for designing REST-compliant APIs Master sophisticated Rails routing concepts and techniques Examine and troubleshoot Rails routing Make the most of ActiveRecord object-relational mapping Utilize Ajax within your Rails applications Incorporate logins and authentication into your application Extend Rails with the best third-party plug-ins and write your own Integrate email services into your applications with ActionMailer Choose the right Rails production configurations Streamline deployment with Capistrano
+ </Summary>
+ <Notes/>
+ <UrlsText/>
+ <AwardsText/>
+ <Authors>
+ <Person person_id="obie_fernandez">Obie Fernandez</Person>
+ </Authors>
  </BookData>
  </BookList>
 </ISBNdb>
