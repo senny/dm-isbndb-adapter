@@ -37,9 +37,11 @@ module DataMapper
         def read(query, set, one, page_number = 1)
           raise IsbndbInterface::ConditionsError, "You need to specify at least one condition" if query.conditions.nil? || query.conditions.empty?
           options = extract_options(query)
-          resource_url = build_request_uri(options,query.model,page_number)
+          resource_name = query.model.storage_name(query.repository.name)
+          list_element_name = Extlib::Inflection.camelize(resource_name.singularize)
+          resource_url = build_request_uri(options,resource_name,page_number)
           doc = request_isbndb_xml(resource_url)
-          doc.elements.each("/ISBNdb/#{query.model.to_s}List") do |list|
+          doc.elements.each("/ISBNdb/#{list_element_name}List") do |list|
             list.elements.each do |record|
               attributes = parse_node_childs(query,record)
               values = result_values(attributes,query.fields,query.repository.name)
@@ -82,15 +84,13 @@ module DataMapper
           properties.map { |p| key = p.field(repository_name); result.key?(key) ? result[key] : nil }
         end
 
-        def build_request_uri(options, model,page_number)
+        def build_request_uri(options, resource_name, page_number)
           # Converts the class to the needed resource name (Book => books)
-          resource_name = model.to_s.downcase.pluralize
           resource_url = "#{@api_url}#{resource_name}.xml?access_key=#{@token}&results=texts,authors,details&page_number=#{page_number}"
           options.each_with_index do |condition,index| 
             prop,val = condition
             resource_url += "&index#{index+1}=#{prop}&value#{index+1}=#{val}"
           end
-        
           resource_url
         end
 

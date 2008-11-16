@@ -16,6 +16,13 @@ class Book
   include DataMapper::Resource::Isbndb::BookModel
 end
 
+class BookD
+  include DataMapper::Resource
+  include DataMapper::Resource::Isbndb::BookModel
+  
+  storage_names[:default] = 'books'
+end
+
 class Author
   include DataMapper::Resource
   include DataMapper::Resource::Isbndb::AuthorModel
