@@ -62,20 +62,41 @@ module DataMapper
         end
       
         def parse_node_childs(query, node)
-          attributes = node.attributes
+          attributes = values_from_rexml_attributes(query,node)
           node.elements.each do |child|
-            attributes.merge! child.attributes
+            attributes.merge! values_from_rexml_attributes(query,child)
             if child.node_type == :element
-              attribute = query.model.properties(query.repository.name).find do |property|
-                property.name.to_s == Extlib::Inflection.underscore(child.name.to_s)
+              attribute = lookop_field_name(query,underscored(child.name.to_s))
+              if attribute
+                attributes[attribute] = child.text.strip unless child.text.nil?
               end
-            end
-          
-            if attribute
-              attributes[attribute.name.to_s] = child.text.strip unless child.text.nil?
             end
           end
           attributes
+        end
+        
+        def values_from_rexml_attributes(query,node)
+          attributes = {}
+          
+          node.attributes.each do |key,value|
+            attribute = lookop_field_name(query,underscored(key))
+            if attribute
+              attributes[attribute] = value
+            end
+          end
+          attributes
+        end
+        
+        def lookop_field_name(query,field)
+          query.fields.each do |e| 
+            name = e.field(query.repository.name) 
+            return name if name == field
+          end
+          nil
+        end
+        
+        def underscored(value)
+          Extlib::Inflection.underscore(value)
         end
         
         def result_values(result, properties, repository_name)
@@ -97,7 +118,6 @@ module DataMapper
           options = {}
           query.conditions.each do |condition|
             operator, property, value = condition
-            puts property.field(query.repository.name)
             case operator
               when :eql, :like then options.merge!(property.field(query.repository.name) => CGI::escape(value))
               else raise IsbndbInterface::ConditionsError, 'At the moment only eql and like is supported'

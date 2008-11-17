@@ -44,6 +44,10 @@ describe "dm-isbndb-adapter" do
     it "should initialize the isbn attribute" do
       @book.isbn.should == '0321445619'
     end
+    
+    it "should set an author property" do
+      @book.author.should == 'Obie Fernandez,'
+    end
 
   end
 
