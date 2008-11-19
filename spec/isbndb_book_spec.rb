@@ -4,11 +4,15 @@ describe "dm-isbndb-adapter" do
   describe "getting all books" do
   
     before(:all) do
-      @books = Book.all(:title.like => 'Rails development')
+      @books = Book.all(:title.like => 'Rails recipes')
     end
   
     it "should get a set of books" do
       @books.should be_kind_of(DataMapper::Collection) 
+    end
+    
+    it "should have different books in the collection" do
+      @books.collect {|b| b.isbn}.uniq.size.should == @books.size
     end
     
     it "should only contain books" do
