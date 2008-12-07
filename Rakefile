@@ -57,3 +57,5 @@ Spec::Rake::SpecTask.new(:spec) do |t|
   end
   t.spec_files = Pathname.glob((ROOT + 'spec/**/*_spec.rb').to_s)
 end
+
+task :default => [:spec]
