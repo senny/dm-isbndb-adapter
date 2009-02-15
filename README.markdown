@@ -8,7 +8,7 @@ a unique tool you won't find anywhere else.
 
 ## Installation
 Installing the adapter is as simple as running:
-           $ sudo gem install senny-dm-isbndb-adapter
+         $ sudo gem install senny-dm-isbndb-adapter
 
 or clone the repository and install the gem from source
          $ git clone git://github.com/senny/dm-isbndb-adapter.git
