@@ -28,12 +28,15 @@ from isbndb. The following section gives you some examples how to
 create your models.
 
 1. You can use the bundled mixins, which contain a basic setup
+      
       class Book
         include DataMapper::Resource
         include DataMapper::Resource::Isbndb::BookModel
       end
+
 2. You can create the whole model yourself. You can lookup the
 properties for the models at the isbndb api reference
+
       class Book
         include DataMapper::Resource
 
@@ -43,3 +46,4 @@ properties for the models at the isbndb api reference
          property :isbn, String
          property :author, String, :field => 'authors_text'
        end
+
